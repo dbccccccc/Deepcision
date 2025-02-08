@@ -1,0 +1,29 @@
+{
+    "analyst": {
+        "name": "Analyst",
+        "description": "Responsible for data analysis and insights",
+        "api_type": "deepseek",
+        "concurrent": true,
+        "prompt_template": "As a data analyst, please analyze the following data and provide insights: {question}",
+        "temperature": 0.7,
+        "max_tokens": 1000
+    },
+    "researcher": {
+        "name": "Researcher",
+        "description": "Responsible for in-depth research and literature review",
+        "api_type": "chatpdf",
+        "concurrent": true,
+        "prompt_template": "As a researcher, please conduct in-depth research and provide a literature review on the following topic: {question}",
+        "temperature": 0.3,
+        "max_tokens": 2000
+    },
+    "decision_maker": {
+        "name": "Decision Maker",
+        "description": "Responsible for synthesizing analysis results and making decisions",
+        "api_type": "deepseek",
+        "concurrent": false,
+        "prompt_template": "As a decision maker, please provide decision recommendations based on the following analysis results: {question}",
+        "temperature": 0.5,
+        "max_tokens": 1500
+    }
+} 
