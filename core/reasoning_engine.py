@@ -3,7 +3,7 @@ Reasoning Engine
 Responsible for handling core decision logic
 """
 from typing import Dict, List, Any, Optional
-from ..architecture import Component
+from utils.architecture import Component
 
 
 class ReasoningEngine(Component):

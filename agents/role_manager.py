@@ -15,11 +15,11 @@ class RoleConfig:
     api_type: str
     prompt_template: str
     concurrent: bool
-    temperature: float
-    max_tokens: int = 2000
+    temperature: Optional[float]
+    max_tokens: Optional[int]
 
 
-class AgentThread:
+class Agent:
     role_config: RoleConfig
 
     def __init__(self, role_config: RoleConfig):
@@ -36,7 +36,7 @@ class RoleManager:
     def __init__(self, template_path: str = "role_template.json"):
         self.template_path = Path(template_path)
         self.roles: Dict[str, RoleConfig] = {}
-        self.active_roles: Dict[str, AgentThread] = {}
+        self.active_roles: Dict[str, Agent] = {}
 
     def load_templates(self) -> bool:
         """Load role templates"""
@@ -52,10 +52,10 @@ class RoleManager:
         """Get configuration for specified role"""
         return self.roles.get(role_name)
 
-    def create_agent(self, role_name: str) -> Optional[AgentThread]:
+    def create_agent(self, role_name: str) -> Optional[Agent]:
         """Create new AI agent instance"""
         if role_config := self.get_role(role_name):
-            role = AgentThread(role_config)
+            role = Agent(role_config)
             return role
         return None
 

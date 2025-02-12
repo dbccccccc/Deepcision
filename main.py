@@ -8,13 +8,27 @@ from agents.role_manager import RoleManager
 from api_integration.api_manager import ApiManager
 from core.reasoning_engine import ReasoningEngine
 from utils.config_loader import ConfigLoader
+from aiohttp import web
 
 
 class Deepcision:
     """Deepcision Main Class"""
 
     def __init__(self):
+        self._setup_server()
         self._setup_components()
+
+    async def test_handler(self, request):
+        return web.Response(text="Test")
+
+    async def send_handler(self, request: web.Request):
+        # TODD
+        return web.Response()
+
+    def _setup_server(self):
+        self.app = web.Application()
+        self.app.router.add_get("/test", self.test_handler)
+        self.app.router.add_post("/api/send", self.send_handler)
 
     def _setup_components(self):
         """Setup components"""
@@ -35,6 +49,9 @@ class Deepcision:
             if not self.config_loader.initialize():
                 return False
 
+            if not self.api_manager.initialize(self.config_loader):
+                return False
+
             if not self.role_manager.load_templates():
                 return False
 
@@ -45,6 +62,12 @@ class Deepcision:
         except Exception as e:
             print(f"System initialization failed: {str(e)}")
             return False
+
+    async def work(self):
+        self.runner = web.AppRunner(self.app)
+        await self.runner.setup()
+        self.site = web.TCPSite(self.runner, host="127.0.0.1", port=3000)
+        await self.site.start()
 
     async def process_query(self, query: Dict[str, Any]) -> Dict[str, Any]:
         """Process query request"""
@@ -70,9 +93,12 @@ async def main():
     app = Deepcision()
     if await app.initialize():
         print("Deepcision system initialized successfully")
+        await app.work()
         # TODO: Add actual application logic
     else:
         print("Deepcision system initialization failed")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    loop = asyncio.get_event_loop()
+    loop.create_task(main())
+    loop.run_forever()

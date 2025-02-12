@@ -3,12 +3,11 @@ Configuration Loading Utility
 Responsible for loading and managing project configuration
 """
 import json
-import yaml
 from pathlib import Path
 from typing import Dict, Any, Optional
 
 from api_integration.api_abstract import ApiConfig
-from ..architecture import Component
+from utils.architecture import Component
 
 
 class ConfigLoader(Component):
@@ -68,15 +67,9 @@ class ConfigLoader(Component):
 # Example configuration file config.example.json
 """
 {
-    "api_keys": {
-        "deepseek": "your_deepseek_key",
-        "chatpdf": "your_chatpdf_key",
-        "stirling": "your_stirling_key"
-    },
-    "system": {
-        "max_threads": 5,
-        "cache_ttl": 3600,
-        "log_level": "info"
+    "deepseek":{
+       "timeout":1000,
+       "base_url":"xxxxx"
     }
 }
 """
