@@ -8,7 +8,7 @@ It maintains a registry of API instances and manages their configurations.
 from typing import Dict, Optional
 
 from api_integration.api_abstract import APIBase, ApiConfig
-from api_integration.deepseek_api import DeepSeekAPI
+from api_integration.openrouter_api import OpenRouterAPI, OpenRouterConfig
 from utils.config_loader import ConfigLoader
 
 
@@ -57,6 +57,17 @@ class ApiManager:
         Returns:
             ApiConfig: Configuration for the specified API, or empty config if not found
         """
+        if name == "openrouter":
+            # Special handling for OpenRouter config
+            raw_config = config.get_config(name) or {}
+            return OpenRouterConfig(
+                base_url=raw_config.get("base_url"),
+                api_key=raw_config.get("api_key"),
+                model=raw_config.get("model"),
+                timeout=raw_config.get("timeout"),
+                http_referer=raw_config.get("http_referer"),
+                x_title=raw_config.get("x_title")
+            )
         return config.get_config(name) or ApiConfig()
 
     def initialize(self, config: ConfigLoader) -> bool:
@@ -69,5 +80,5 @@ class ApiManager:
         Returns:
             bool: True if initialization was successful
         """
-        self.add_api(DeepSeekAPI(self.get_config(config, "deepseek")))
+        self.add_api(OpenRouterAPI(self.get_config(config, "openrouter")))
         return True
